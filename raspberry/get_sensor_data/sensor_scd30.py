@@ -13,5 +13,5 @@ def get_sensor_scd30_temp():
     return scd30.temperature - scd30.temperature_offset
 
 
-def get_sensor_scd30_humidity():
+def get_sensor_scd30_rh():
     return scd30.relative_humidity

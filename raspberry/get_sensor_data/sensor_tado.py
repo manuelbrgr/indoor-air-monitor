@@ -11,16 +11,11 @@ home_id = os.environ['HOME_ID']
 zone_id = os.environ['ZONE_ID']
 
 
-def get_sensor_data_object(json):
-    response = json["activityDataPoints"]
-    return response
-
-
-def get_sensor_tado():
+def get_sensor_heating():
     response = requests.get(
         '{base_url}homes/{home_id}/zones/{zone_id}/state?username={username}&password={password}'.format(
             base_url=base_url, home_id=home_id, zone_id=zone_id, username=username, password=password))
     if (response.status_code == 200):
-        return get_sensor_data_object(response.json())
+        return response.json()["activityDataPoints"]["heatingPower"]["percentage"]
     else:
         raise Exception("Response of Tado failed")

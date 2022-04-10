@@ -15,5 +15,13 @@ def get_sensor_pms5003():
     return readings
 
 
-def get_sensor_gas():
-    return gas.read_all()
+def get_sensor_nh3():
+    return gas.read_nh3()
+
+
+def get_sensor_ox():
+    return gas.read_oxidising()
+
+
+def get_sensor_red():
+    return gas.read_reducing()
