@@ -1,10 +1,11 @@
 import time
 import json
+from datetime import datetime
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTShadowClient
 from aws_helpers.custom_shadow_helpers import customShadowCallback_Delete, customShadowCallback_Update
 
 # from get_sensor_data.sensor_sgp30 import get_sensor_sgp30
-from get_sensor_data.sensor_scd30 import get_sensor_scd30_co2, get_sensor_scd30_temp, get_sensor_scd30_rh
+from get_sensor_data.sensor_scd30 import get_sensor_scd30_co2
 from get_sensor_data.sensor_sgp30 import get_sensor_sgp30
 from get_sensor_data.sensor_enviro import get_sensor_pms5003
 from get_sensor_data.sensor_enviro import get_sensor_nh3, get_sensor_ox, get_sensor_red
@@ -88,7 +89,7 @@ while True:
             "humidity_outdoor": humidity_outdoor, "pressure_outdoor": pressure_outdoor, "co2": co2, "nh3": nh3, "ox": ox,
             "red": red, "pm1": pm1, "pm2": pm2, "pm10": pm10, "heating": heating, "tvoc": tvoc, "eco2": eco2,
             "livingroom_door_open": livingroom_door_open, "livingroom_window_open": livingroom_window_open, "balcony_door_open": balcony_door_open,
-            "kitchen_window_open": kitchen_window_open}}}
+            "kitchen_window_open": kitchen_window_open, "timestamp": datetime.now().isoformat()[:-3]+'Z'}}}
 
         # Update shadow
         deviceShadowHandler.shadowUpdate(json.dumps(
