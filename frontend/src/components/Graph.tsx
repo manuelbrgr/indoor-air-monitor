@@ -6,7 +6,7 @@ import * as d3 from 'd3';
 
 Chart.register(...registerables);
 
-export default function Graph() {
+export default function Graph({ url }: { url: string }) {
   const [data, setData] = useState({
     labels: [],
     datasets: {
@@ -24,7 +24,7 @@ export default function Graph() {
     const fetchData = async () => {
       setLoading(true);
       try {
-        d3.csv(`https://iaq-data.brgr.rocks/30min.csv`).then((datapoints) => {
+        d3.csv(url).then((datapoints) => {
           const timestamp = [];
           const temperature = [];
           const humidity = [];
@@ -34,7 +34,6 @@ export default function Graph() {
           const window = [];
           const balcony = [];
 
-          console.log(datapoints);
           for (const i in datapoints) {
             if (isNaN(i)) continue;
             const current = datapoints[i];
@@ -48,19 +47,18 @@ export default function Graph() {
             door.push(current.livingroom_door_open == `true` ? 1 : 0);
             window.push(current.livingroom_window_open == `true` ? 1 : 0);
             balcony.push(current.balcony_door_open == `true` ? 1 : 0);
-            console.log(current.balcony_door_open);
           }
 
           setData({
-            labels: timestamp,
+            labels: timestamp.reverse(),
             datasets: {
-              temperature,
-              humidity,
-              co2,
-              heating,
-              door,
-              window,
-              balcony,
+              temperature: temperature.reverse(),
+              humidity: humidity.reverse(),
+              co2: co2.reverse(),
+              heating: heating.reverse(),
+              door: door.reverse(),
+              window: window.reverse(),
+              balcony: balcony.reverse(),
             },
           });
         });
@@ -77,11 +75,11 @@ export default function Graph() {
     <div>
       <Line
         data={{
-          labels: data.labels.reverse(),
+          labels: data.labels,
           datasets: [
             {
               label: `temperature`,
-              data: data.datasets.temperature.reverse(),
+              data: data.datasets.temperature,
               borderWidth: 1,
               borderColor: `blue`,
               backgroundColor: `blue`,
@@ -90,7 +88,7 @@ export default function Graph() {
             },
             {
               label: `humidity`,
-              data: data.datasets.humidity.reverse(),
+              data: data.datasets.humidity,
               borderWidth: 1,
               borderColor: `red`,
               backgroundColor: `red`,
@@ -99,7 +97,7 @@ export default function Graph() {
             },
             {
               label: `co2`,
-              data: data.datasets.co2.reverse(),
+              data: data.datasets.co2,
               borderWidth: 1,
               borderColor: `green`,
               backgroundColor: `green`,
@@ -111,27 +109,27 @@ export default function Graph() {
               label: `Heating`,
               backgroundColor: `rgb(255,255,224)`,
               borderColor: `rgb(255,255,224)`,
-              data: data.datasets.heating.reverse(),
+              data: data.datasets.heating,
               yAxisID: `percentage`,
             },
             {
               type: `bar`,
               label: `Door`,
-              data: data.datasets.door.reverse(),
+              data: data.datasets.door,
               yAxisID: `boolean`,
               hidden: true,
             },
             {
               type: `bar`,
               label: `Window`,
-              data: data.datasets.window.reverse(),
+              data: data.datasets.window,
               yAxisID: `boolean`,
               hidden: true,
             },
             {
               type: `bar`,
               label: `Balcony`,
-              data: data.datasets.balcony.reverse(),
+              data: data.datasets.balcony,
               yAxisID: `boolean`,
               hidden: true,
             },
