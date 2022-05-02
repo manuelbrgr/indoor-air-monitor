@@ -5,10 +5,10 @@ from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTShadowClient
 from aws_helpers.custom_shadow_helpers import customShadowCallback_Delete, customShadowCallback_Update
 
 # from get_sensor_data.sensor_sgp30 import get_sensor_sgp30
-from get_sensor_data.sensor_scd30 import get_sensor_scd30_co2
-from get_sensor_data.sensor_sgp30 import get_sensor_sgp30
+from get_sensor_data.sensor_scd30 import get_sensor_scd30_co2, get_sensor_scd30_temp
+from get_sensor_data.sensor_sgp30 import get_sensor_sgp30_tvoc, get_sensor_sgp30_eco2
 from get_sensor_data.sensor_enviro import get_sensor_pms5003
-from get_sensor_data.sensor_enviro import get_sensor_nh3, get_sensor_ox, get_sensor_red
+from get_sensor_data.sensor_enviro import get_gas_sensor
 from get_sensor_data.sensor_zigbee import get_sensor_zigbee
 from get_sensor_data.sensor_tado import get_sensor_heating
 
@@ -42,21 +42,23 @@ while True:
         zigbee = get_sensor_zigbee()
         particles = get_sensor_pms5003()
         temperature = zigbee["living-room-multi"]["temperature"]/100
+        fallback_temp = round(get_sensor_scd30_temp(), 2)
         humidity = zigbee["living-room-multi"]["humidity"]/100
         pressure = zigbee["living-room-multi"]["pressure"]
         temperature_outdoor = zigbee["balcony-multi"]["temperature"]/100
         humidity_outdoor = zigbee["balcony-multi"]["humidity"]/100
         pressure_outdoor = zigbee["balcony-multi"]["pressure"]
-        co2 = get_sensor_scd30_co2()
-        nh3 = get_sensor_nh3()
-        ox = get_sensor_ox()
-        red = get_sensor_red()
+        co2 = round(get_sensor_scd30_co2(), 2)
+        gas = get_gas_sensor()
+        nh3 = round(gas.nh3 / 1000, 2)
+        ox = round(gas.oxidising / 1000, 2)
+        red = round(gas.reducing / 1000, 2)
         pm1 = particles.pm_ug_per_m3(1)
         pm2 = particles.pm_ug_per_m3(2.5)
         pm10 = particles.pm_ug_per_m3(10)
         heating = get_sensor_heating()
-        tvoc = get_sensor_sgp30().total_voc
-        eco2 = get_sensor_sgp30().equivalent_co2
+        tvoc = get_sensor_sgp30_tvoc()
+        eco2 = get_sensor_sgp30_eco2()
         livingroom_door_open = zigbee["livingroom-door"]["open"]
         livingroom_window_open = zigbee["livingroom-window"]["open"]
         balcony_door_open = zigbee["balcony-door"]["open"]
@@ -64,6 +66,7 @@ while True:
 
         # Display moisture and temp readings
         print("Temperature: {}".format(temperature))
+        print("Fallback Temp: {}".format(fallback_temp))
         print("Relative Humidity: {}".format(humidity))
         print("Pressure: {}".format(pressure))
         print("Temperature Outdoor: {}".format(temperature_outdoor))
@@ -72,7 +75,7 @@ while True:
         print("CO2 Level: {}".format(co2))
         print("NH3 Level: {}".format(nh3))
         print("OX Level: {}".format(ox))
-        print("RED Level: {}".format(nh3))
+        print("RED Level: {}".format(red))
         print("PM Level: {pm1} PM1, {pm2} PM2.5, {pm10} PM10".format(
             pm1=pm1, pm2=pm2, pm10=pm10))
         print("Heating Level: {}".format(heating))
@@ -85,7 +88,7 @@ while True:
 
         # Create message payload
         payload = {"state": {"reported": {
-            "temperature": temperature, "humidity": humidity, "pressure": pressure, "temperature_outdoor": temperature_outdoor,
+            "temperature": temperature, "fallback_temp": fallback_temp, "humidity": humidity, "pressure": pressure, "temperature_outdoor": temperature_outdoor,
             "humidity_outdoor": humidity_outdoor, "pressure_outdoor": pressure_outdoor, "co2": co2, "nh3": nh3, "ox": ox,
             "red": red, "pm1": pm1, "pm2": pm2, "pm10": pm10, "heating": heating, "tvoc": tvoc, "eco2": eco2,
             "livingroom_door_open": livingroom_door_open, "livingroom_window_open": livingroom_window_open, "balcony_door_open": balcony_door_open,

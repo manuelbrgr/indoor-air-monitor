@@ -1,22 +1,16 @@
-from sgp30 import SGP30
 import time
-import sys
+import busio
+import adafruit_sgp30
 
-sgp30 = SGP30()
+import board
+i2c = busio.I2C(board.SCL, board.SDA, frequency=100000)
 
-# result = sgp30.command('set_baseline', (0xFECA, 0xBEBA))
-# result = sgp30.command('get_baseline')
-# print(["{:02x}".format(n) for n in result])
+sgp30 = adafruit_sgp30.Adafruit_SGP30(i2c)
 
+sgp30.iaq_init()
 
-def crude_progress_bar():
-    sys.stdout.write('.')
-    sys.stdout.flush()
+def get_sensor_sgp30_tvoc():
+    return sgp30.TVOC
 
-
-sgp30.start_measurement(crude_progress_bar)
-sys.stdout.write('\n')
-
-
-def get_sensor_sgp30():
-    return sgp30.get_air_quality()
+def get_sensor_sgp30_eco2():
+    return sgp30.eCO2
