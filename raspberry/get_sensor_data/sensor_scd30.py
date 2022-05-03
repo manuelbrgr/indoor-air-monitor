@@ -3,7 +3,7 @@ import adafruit_scd30
 
 i2c = board.I2C()  # uses board.SCL and board.SDA
 scd30 = adafruit_scd30.SCD30(i2c)
-scd30.temperature_offset = 1.5
+scd30.temperature_offset = 1.1
 
 
 def get_sensor_scd30_co2():

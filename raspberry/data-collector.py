@@ -5,7 +5,7 @@ from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTShadowClient
 from aws_helpers.custom_shadow_helpers import customShadowCallback_Delete, customShadowCallback_Update
 
 # from get_sensor_data.sensor_sgp30 import get_sensor_sgp30
-from get_sensor_data.sensor_scd30 import get_sensor_scd30_co2, get_sensor_scd30_temp
+from get_sensor_data.sensor_scd30 import get_sensor_scd30_co2, get_sensor_scd30_temp, get_sensor_scd30_rh
 from get_sensor_data.sensor_sgp30 import get_sensor_sgp30_tvoc, get_sensor_sgp30_eco2
 from get_sensor_data.sensor_enviro import get_sensor_pms5003
 from get_sensor_data.sensor_enviro import get_gas_sensor
@@ -42,8 +42,9 @@ while True:
         zigbee = get_sensor_zigbee()
         particles = get_sensor_pms5003()
         temperature = zigbee["living-room-multi"]["temperature"]/100
-        fallback_temp = round(get_sensor_scd30_temp(), 2)
         humidity = zigbee["living-room-multi"]["humidity"]/100
+        rtemperature = round(get_sensor_scd30_temp(), 2)
+        rhumidity = round(get_sensor_scd30_rh(), 2)
         pressure = zigbee["living-room-multi"]["pressure"]
         temperature_outdoor = zigbee["balcony-multi"]["temperature"]/100
         humidity_outdoor = zigbee["balcony-multi"]["humidity"]/100
@@ -66,8 +67,9 @@ while True:
 
         # Display moisture and temp readings
         print("Temperature: {}".format(temperature))
-        print("Fallback Temp: {}".format(fallback_temp))
         print("Relative Humidity: {}".format(humidity))
+        print("Realtime Temperature: {}".format(rtemperature))
+        print("Realtime Humidity: {}".format(rhumidity))
         print("Pressure: {}".format(pressure))
         print("Temperature Outdoor: {}".format(temperature_outdoor))
         print("Relative Humidity Outdoor: {}".format(humidity_outdoor))
@@ -88,7 +90,7 @@ while True:
 
         # Create message payload
         payload = {"state": {"reported": {
-            "temperature": temperature, "fallback_temp": fallback_temp, "humidity": humidity, "pressure": pressure, "temperature_outdoor": temperature_outdoor,
+            "temperature": temperature, "humidity": humidity, "rtemperature": rtemperature, "rhumidity": rhumidity, "pressure": pressure, "temperature_outdoor": temperature_outdoor,
             "humidity_outdoor": humidity_outdoor, "pressure_outdoor": pressure_outdoor, "co2": co2, "nh3": nh3, "ox": ox,
             "red": red, "pm1": pm1, "pm2": pm2, "pm10": pm10, "heating": heating, "tvoc": tvoc, "eco2": eco2,
             "livingroom_door_open": livingroom_door_open, "livingroom_window_open": livingroom_window_open, "balcony_door_open": balcony_door_open,
