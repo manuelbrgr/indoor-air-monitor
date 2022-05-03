@@ -8577,6 +8577,17 @@ gatsby-parcel-config@^0.4.0:
     "@parcel/transformer-raw" "^2.3.2"
     "@parcel/transformer-react-refresh-wrap" "^2.3.2"
 
+gatsby-plugin-manifest@4.13.0:
+  version "4.13.0"
+  resolved "https://registry.yarnpkg.com/gatsby-plugin-manifest/-/gatsby-plugin-manifest-4.13.0.tgz#5e96f0640ab4145f49ede94a85a7ad11a943d834"
+  integrity sha512-Ifa6P86CeKgZrgcO6Q++WpupyWJ+zfT6U0dL+vfJ/9i+s+Z69saRY6JStI0ivN3LpotOLSOasDSEQO44089ihg==
+  dependencies:
+    "@babel/runtime" "^7.15.4"
+    gatsby-core-utils "^3.13.0"
+    gatsby-plugin-utils "^3.7.0"
+    semver "^7.3.5"
+    sharp "^0.30.3"
+
 gatsby-plugin-page-creator@^4.13.0:
   version "4.13.0"
   resolved "https://registry.yarnpkg.com/gatsby-plugin-page-creator/-/gatsby-plugin-page-creator-4.13.0.tgz#1158ebcfac2430663d961c8ed3b4e3d0ef9b1043"

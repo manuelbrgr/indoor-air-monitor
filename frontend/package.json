@@ -39,6 +39,7 @@
     "csv": "6.0.5",
     "d3": "7.4.4",
     "gatsby": "4.13.1",
+    "gatsby-plugin-manifest": "4.13.0",
     "moment": "2.29.3",
     "react": "18.1.0",
     "react-chartjs-2": "4.1.0",

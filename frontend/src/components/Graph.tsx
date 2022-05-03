@@ -12,6 +12,7 @@ export default function Graph({ url }: { url: string }) {
     datasets: {
       temperature: [],
       humidity: [],
+      temperature_outdoor: [],
       co2: [],
       heating: [],
       door: [],
@@ -28,6 +29,7 @@ export default function Graph({ url }: { url: string }) {
           const timestamp = [];
           const temperature = [];
           const humidity = [];
+          const temperatureOutdoor = [];
           const co2 = [];
           const heating = [];
           const door = [];
@@ -40,8 +42,9 @@ export default function Graph({ url }: { url: string }) {
             timestamp.push(
               `${moment.utc(current.timestamp).format(`DD.MM.YY HH:mm:ss`)}`,
             );
-            temperature.push(current.temperature);
-            humidity.push(current.humidity);
+            temperature.push(current.rtemperature);
+            humidity.push(current.rhumidity);
+            temperatureOutdoor.push(current.temperature_outdoor);
             co2.push(current.co2);
             heating.push(current.heating);
             door.push(current.livingroom_door_open == `true` ? 1 : 0);
@@ -59,6 +62,7 @@ export default function Graph({ url }: { url: string }) {
               door: door.reverse(),
               window: window.reverse(),
               balcony: balcony.reverse(),
+              temperature_outdoor: temperatureOutdoor.reverse(),
             },
           });
         });
@@ -78,7 +82,7 @@ export default function Graph({ url }: { url: string }) {
           labels: data.labels,
           datasets: [
             {
-              label: `temperature`,
+              label: `temp`,
               data: data.datasets.temperature,
               borderWidth: 1,
               borderColor: `blue`,
@@ -87,12 +91,22 @@ export default function Graph({ url }: { url: string }) {
               pointRadius: 0,
             },
             {
-              label: `humidity`,
+              label: `rh`,
               data: data.datasets.humidity,
               borderWidth: 1,
               borderColor: `red`,
               backgroundColor: `red`,
               yAxisID: `humidity`,
+              pointRadius: 0,
+            },
+            {
+              label: `outdoor temp`,
+              data: data.datasets.temperature_outdoor,
+              borderWidth: 1,
+              borderColor: `darkblue`,
+              backgroundColor: `darkblue`,
+              hidden: true,
+              yAxisID: `temperature`,
               pointRadius: 0,
             },
             {
@@ -110,28 +124,37 @@ export default function Graph({ url }: { url: string }) {
               backgroundColor: `rgb(255,255,224)`,
               borderColor: `rgb(255,255,224)`,
               data: data.datasets.heating,
+              hidden: true,
               yAxisID: `percentage`,
             },
             {
-              type: `bar`,
               label: `Door`,
               data: data.datasets.door,
+              backgroundColor: `rgb(60, 60, 60)`,
+              borderColor: `rgb(60, 60, 60)`,
+              borderWidth: 1,
               yAxisID: `boolean`,
               hidden: true,
+              pointRadius: 0,
             },
             {
-              type: `bar`,
               label: `Window`,
               data: data.datasets.window,
+              backgroundColor: `rgb(60, 60, 60)`,
+              borderColor: `rgb(60, 60, 60)`,
+              borderWidth: 1,
               yAxisID: `boolean`,
               hidden: true,
+              pointRadius: 0,
             },
             {
-              type: `bar`,
               label: `Balcony`,
               data: data.datasets.balcony,
+              backgroundColor: `rgb(60, 60, 60)`,
+              borderWidth: 1,
               yAxisID: `boolean`,
               hidden: true,
+              pointRadius: 0,
             },
           ],
         }}
@@ -157,6 +180,8 @@ export default function Graph({ url }: { url: string }) {
               type: `linear`,
               position: `left`,
               display: false,
+              min: 0,
+              max: 2,
             },
             co2: {
               type: `linear`,
