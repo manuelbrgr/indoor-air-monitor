@@ -5,8 +5,10 @@ module.exports = {
     {
       resolve: 'gatsby-plugin-manifest',
       options: {
+        name: `IAQ Monitor`,
         icon: 'src/assets/icons/sun.svg',
       },
     },
+    `gatsby-plugin-react-helmet`,
   ],
 };

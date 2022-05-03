@@ -151,6 +151,7 @@ export default function Graph({ url }: { url: string }) {
               label: `Balcony`,
               data: data.datasets.balcony,
               backgroundColor: `rgb(60, 60, 60)`,
+              borderColor: `rgb(60, 60, 60)`,
               borderWidth: 1,
               yAxisID: `boolean`,
               hidden: true,
