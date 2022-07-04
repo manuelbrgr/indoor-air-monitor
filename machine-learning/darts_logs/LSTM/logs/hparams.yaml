@@ -1,0 +1,16 @@
+dropout: 0.1
+hidden_dim: 25
+input_chunk_length: 180
+input_size: 1
+likelihood: null
+lr_scheduler_cls: null
+lr_scheduler_kwargs: null
+name: LSTM
+nr_params: 1
+num_layers: 1
+num_layers_out_fc: []
+optimizer_cls: !!python/name:torch.optim.adam.Adam ''
+optimizer_kwargs:
+  lr: 0.001
+output_chunk_length: 180
+target_size: 1
