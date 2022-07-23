@@ -10,7 +10,7 @@ provider:
   region: us-east-1
 
 functions:
-  skill:
+  scheduler:
     handler: index.scheduler
     events:
       - schedule: cron(*/15 * * * *)
