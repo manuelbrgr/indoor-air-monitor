@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "aws-sdk": "^2.427.0",
+    "dynamodb-data-types": "^4.0.0",
+    "serverless-domain-manager": "^6.0.3"
+  }
+}
