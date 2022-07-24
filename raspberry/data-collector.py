@@ -1,6 +1,7 @@
 import time
 import json
 from datetime import datetime
+from utils.to_csv import create_csv_file, to_csv
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTShadowClient
 from aws_helpers.custom_shadow_helpers import customShadowCallback_Delete, customShadowCallback_Update
 
@@ -13,6 +14,7 @@ from get_sensor_data.sensor_zigbee import get_sensor_zigbee
 from get_sensor_data.sensor_tado import get_sensor_heating
 
 API_ENDPOINT = "abeqm7ntwv6xv-ats.iot.us-east-1.amazonaws.com"
+PREDICTION_DATA_PATH = "/home/remote/iot/15min.csv"
 
 # Init AWSIoTMQTTShadowClient
 myAWSIoTMQTTShadowClient = AWSIoTMQTTShadowClient('PiClient')
@@ -35,6 +37,8 @@ deviceShadowHandler = myAWSIoTMQTTShadowClient.createShadowHandlerWithName(
 
 # Delete current shadow JSON doc
 deviceShadowHandler.shadowDelete(customShadowCallback_Delete, 5)
+
+create_csv_file(PREDICTION_DATA_PATH)
 
 # Read data from moisture sensor and update shadow
 while True:
@@ -95,6 +99,8 @@ while True:
             "red": red, "pm1": pm1, "pm2": pm2, "pm10": pm10, "heating": heating, "tvoc": tvoc, "eco2": eco2,
             "livingroom_door_open": livingroom_door_open, "livingroom_window_open": livingroom_window_open, "balcony_door_open": balcony_door_open,
             "kitchen_window_open": kitchen_window_open, "timestamp": datetime.now().isoformat()[:-3]+'Z'}}}
+
+        to_csv(payload["state"]["reported"], PREDICTION_DATA_PATH, 180)
 
         # Update shadow
         deviceShadowHandler.shadowUpdate(json.dumps(
