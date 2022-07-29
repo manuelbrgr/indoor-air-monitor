@@ -3,7 +3,7 @@ import pandas as pd
 import json
 
 
-def csv_to_json(csvFilePath, ):
+def csv_to_json(csvFilePath):
     jsonArray = []
 
     with open(csvFilePath, encoding='utf-8') as csvf:
@@ -21,7 +21,12 @@ def create_csv_file(file_path):
         createFile.write('')
 
 
-def to_csv(payload, file_path, max_entries):
+def to_csv(payload, file_path):
+    df = pd.DataFrame(pd.Series(payload))
+    df.to_csv(file_path, encoding='utf-8', index=False)
+
+
+def to_csv_append(payload, file_path, max_entries):
     lines = list()
     lines.append(payload)
     json_list = csv_to_json(file_path)

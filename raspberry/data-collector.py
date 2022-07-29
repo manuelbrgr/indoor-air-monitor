@@ -1,7 +1,7 @@
 import time
 import json
 from datetime import datetime
-from utils.to_csv import create_csv_file, to_csv
+from utils.to_csv import csv_to_json, create_csv_file, to_csv_append
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTShadowClient
 from aws_helpers.custom_shadow_helpers import customShadowCallback_Delete, customShadowCallback_Update
 
@@ -14,7 +14,8 @@ from get_sensor_data.sensor_zigbee import get_sensor_zigbee
 from get_sensor_data.sensor_tado import get_sensor_heating
 
 API_ENDPOINT = "abeqm7ntwv6xv-ats.iot.us-east-1.amazonaws.com"
-PREDICTION_DATA_PATH = "/home/remote/iot/15min.csv"
+HISTORY_DATA_PATH = "/home/remote/iot/15min.csv"
+PREDICTION_DATA_PATH = "/home/remote/iot/prediction.json"
 
 # Init AWSIoTMQTTShadowClient
 myAWSIoTMQTTShadowClient = AWSIoTMQTTShadowClient('PiClient')
@@ -38,11 +39,13 @@ deviceShadowHandler = myAWSIoTMQTTShadowClient.createShadowHandlerWithName(
 # Delete current shadow JSON doc
 deviceShadowHandler.shadowDelete(customShadowCallback_Delete, 5)
 
-create_csv_file(PREDICTION_DATA_PATH)
+create_csv_file(HISTORY_DATA_PATH)
 
 # Read data from moisture sensor and update shadow
 while True:
     try:
+        predictions_file = open(PREDICTION_DATA_PATH)
+        predictions = json.load(predictions_file)
         zigbee = get_sensor_zigbee()
         particles = get_sensor_pms5003()
         temperature = zigbee["living-room-multi"]["temperature"]/100
@@ -68,6 +71,7 @@ while True:
         livingroom_window_open = zigbee["livingroom-window"]["open"]
         balcony_door_open = zigbee["balcony-door"]["open"]
         kitchen_window_open = zigbee["kitchen-window"]["open"]
+        co2_prediction = predictions["co2_prediction"]
 
         # Display moisture and temp readings
         print("Temperature: {}".format(temperature))
@@ -91,6 +95,7 @@ while True:
         print("Livingroom window open: {}".format(livingroom_window_open))
         print("Balcony door open: {}".format(balcony_door_open))
         print("Kitchen window open: {}".format(kitchen_window_open))
+        print("Prediction CO2: {}".format(co2_prediction))
 
         # Create message payload
         payload = {"state": {"reported": {
@@ -98,14 +103,14 @@ while True:
             "humidity_outdoor": humidity_outdoor, "pressure_outdoor": pressure_outdoor, "co2": co2, "nh3": nh3, "ox": ox,
             "red": red, "pm1": pm1, "pm2": pm2, "pm10": pm10, "heating": heating, "tvoc": tvoc, "eco2": eco2,
             "livingroom_door_open": livingroom_door_open, "livingroom_window_open": livingroom_window_open, "balcony_door_open": balcony_door_open,
-            "kitchen_window_open": kitchen_window_open, "timestamp": datetime.now().isoformat()[:-3]+'Z'}}}
+            "kitchen_window_open": kitchen_window_open, "prediction_co2": co2_prediction, "timestamp": datetime.now().isoformat()[:-3]+'Z'}}}
 
-        to_csv(payload["state"]["reported"], PREDICTION_DATA_PATH, 180)
+        to_csv_append(payload["state"]["reported"], HISTORY_DATA_PATH, 180)
 
         # Update shadow
         deviceShadowHandler.shadowUpdate(json.dumps(
             payload), customShadowCallback_Update, 5)
-    except:
+    except ValueError:
         print("Something went wrong while trying to create the payload")
 
     time.sleep(10)

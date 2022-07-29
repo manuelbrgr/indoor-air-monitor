@@ -1,0 +1,116 @@
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+sensor:
+  - platform: rest
+    name: IAQdata
+    json_attributes_path: "state"
+    json_attributes:
+      - temperature
+      - rtemperature
+      - temperature_outdoor
+      - humidity
+      - rhumidity
+      - humidity_outdoor
+      - pressure
+      - pressure_outdoor
+      - co2
+      - eco2
+      - tvoc
+      - ox
+      - red
+      - nh3
+      - pm1
+      - pm2
+      - pm10
+      - livingroom_door_open
+      - livingroom_window_open
+      - balcony_door_open
+      - kitchen_window_open
+      - prediction_co2
+    resource: https://iaq-api.brgr.rocks/live
+    method: GET
+    headers:
+      "x-api-key": "54fe8ebf3480606c5539f1a5f91b7a4452e7677c"
+    scan_interval: 10
+    value_template: "{{ value_json.state.timestamp }}"
+  - platform: template
+    sensors:
+      temperature:
+        friendly_name: "Indoor Temperature"
+        value_template: "{{ state_attr('sensor.iaqdata', 'temperature') }}"
+      rtemperature:
+        friendly_name: "Realtime Indoor Temperature"
+        value_template: "{{ state_attr('sensor.iaqdata', 'rtemperature') }}"
+      temperature_outdoor:
+        friendly_name: "Outdoor Temperature"
+        value_template: "{{ state_attr('sensor.iaqdata', 'temperature_outdoor') }}"
+      humidity:
+        friendly_name: "Indoor Humidity"
+        value_template: "{{ state_attr('sensor.iaqdata', 'humidity') }}"
+      humidity_outdoor:
+        friendly_name: "Realtime Indoor Humidity"
+        value_template: "{{ state_attr('sensor.iaqdata', 'rhumidity') }}"
+      temperature:
+        friendly_name: "Outdoor Humidity"
+        value_template: "{{ state_attr('sensor.iaqdata', 'humidity_outdoor') }}"
+      pressure:
+        friendly_name: "Indoor Pressure"
+        value_template: "{{ state_attr('sensor.iaqdata', 'pressure') }}"
+      pressure_outdoor:
+        friendly_name: "Outdoor Pressure"
+        value_template: "{{ state_attr('sensor.iaqdata', 'pressure_outdoor') }}"
+      co2:
+        friendly_name: "CO2"
+        value_template: "{{ state_attr('sensor.iaqdata', 'co2') }}"
+      coeco22:
+        friendly_name: "eCO2"
+        value_template: "{{ state_attr('sensor.iaqdata', 'eco2') }}"
+      tvoc:
+        friendly_name: "TVOC"
+        value_template: "{{ state_attr('sensor.iaqdata', 'tvoc') }}"
+      ox:
+        friendly_name: "OX"
+        value_template: "{{ state_attr('sensor.iaqdata', 'ox') }}"
+      red:
+        friendly_name: "RED"
+        value_template: "{{ state_attr('sensor.iaqdata', 'red') }}"
+      nh3:
+        friendly_name: "NH3"
+        value_template: "{{ state_attr('sensor.iaqdata', 'nh3') }}"
+      pm1:
+        friendly_name: "PM1"
+        value_template: "{{ state_attr('sensor.iaqdata', 'pm1') }}"
+      pm2:
+        friendly_name: "PM2"
+        value_template: "{{ state_attr('sensor.iaqdata', 'pm2') }}"
+      pm10:
+        friendly_name: "PM10"
+        value_template: "{{ state_attr('sensor.iaqdata', 'pm10') }}"
+      livingroom_door_open:
+        friendly_name: "Livingroom Door Open"
+        value_template: "{{ state_attr('sensor.iaqdata', 'livingroom_door_open') }}"
+      livingroom_window_open:
+        friendly_name: "Livingroom Window Open"
+        value_template: "{{ state_attr('sensor.iaqdata', 'livingroom_window_open') }}"
+      balcony_door_open:
+        friendly_name: "Balcony Door Open"
+        value_template: "{{ state_attr('sensor.iaqdata', 'balcony_door_open') }}"
+      kitchen_window_open:
+        friendly_name: "Kitchen Window Open"
+        value_template: "{{ state_attr('sensor.iaqdata', 'kitchen_window_open') }}"
+      prediction_co2:
+        friendly_name: "Prediction CO2"
+        value_template: "{{ state_attr('sensor.iaqdata', 'prediction_co2').value }}"
+
+input_boolean:
+  co2_exceeded:
+    name: CO2 limit exceeded
