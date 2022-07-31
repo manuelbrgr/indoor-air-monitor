@@ -1,0 +1,70 @@
+service: iaq
+
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  memorySize: 128
+  apiGateway:
+    apiKeys:
+      - value: 54fe8ebf3480606c5539f1a5f91b7a4452e7677c
+        description: Basic API key for clients
+    usagePlan:
+      quota:
+        limit: 100000
+        period: DAY
+      throttle:
+        burstLimit: 200
+        rateLimit: 100
+
+  stage: prod
+  region: us-east-1
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - "ses:SendEmail"
+        - dynamodb:Query
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+      Resource: "*"
+
+  environment:
+    IAQ_TABLE: "${self:service}-live-${opt:stage, self:provider.stage}"
+
+plugins:
+  - serverless-domain-manager
+
+custom:
+  customDomain:
+    domainName: iaq-api.brgr.rocks
+    basePath: ""
+    stage: ${self:provider.stage}
+
+functions:
+  getLiveData:
+    handler: live-data.get
+    description: Get Live IAQ Data
+    events:
+      - http:
+          path: live
+          method: get
+          cors: true
+          private: true
+
+resources:
+  Resources:
+    IaqDynamoDbTable:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: "id"
+            AttributeType: "S"
+        KeySchema:
+          - AttributeName: "id"
+            KeyType: "HASH"
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.IAQ_TABLE}

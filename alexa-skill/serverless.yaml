@@ -1,0 +1,16 @@
+service: iaq-airbase-alexa
+
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+
+  stage: prod
+  region: us-east-1
+
+functions:
+  skill:
+    handler: index.handler
+    events:
+      - alexaSkill: amzn1.ask.skill.ea418064-d62f-4159-9e21-bf4020775cf7
