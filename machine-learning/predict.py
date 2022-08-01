@@ -5,8 +5,6 @@ import json
 from helpers import fix_pythonpath_if_working_locally
 fix_pythonpath_if_working_locally()
 
-import requests
-import io
 import pandas as pd
 import numpy as np
 import torch
@@ -16,8 +14,9 @@ import datetime as dt
 from darts import TimeSeries
 from darts.models import BlockRNNModel
 from darts.utils.missing_values import fill_missing_values
-from sklearn.preprocessing import MinMaxScaler
 from darts.dataprocessing.transformers import Scaler
+from pytorch_lightning import Trainer
+
 
 # for reproducibility
 torch.manual_seed(1)
@@ -40,8 +39,7 @@ def loadDataset(path):
     return dataset[cols].drop_duplicates(subset=['timestamp'], keep='last')
 
 def getPrediction():
-    from pytorch_lightning import Trainer
-    model_co2 = BlockRNNModel.load_model('co2_gru_90x90x50.pth.tar')
+    model_co2 = BlockRNNModel.load_model('co2_gru_90x90x50_retrained.pth.tar')
     dataset = loadDataset(HISTORY_DATA_PATH)
 
     # series to predict, in this case CO2
@@ -74,7 +72,7 @@ def getPrediction():
     pred_list_scaled = model_co2.predict(n=past, series=past_series_co2_part, past_covariates=past_covariates_part, trainer=Trainer(accelerator="cpu"))
     pred_list = scaler.inverse_transform(pred_list_scaled)
 
-    return round(pred_list.last_value(), 2)
+    return round(pred_list.last_value(), 2) if pred_list.last_value() > 420 else 420
 
 def savePrediction(prediction):
     data = json.dumps({"co2_prediction": {"value": prediction, "timestamp": datetime.now().isoformat()[:-3]+'Z'}})
@@ -85,7 +83,9 @@ def savePrediction(prediction):
 
 while True:
     try:
-        print(getPrediction())
+        prediction = getPrediction()
+        savePrediction(prediction)
+        print("Within the next 15 minutes the CO2 value should be around: " + prediction)
     except:
         print("Something went wrong while trying to create the prediction")
     time.sleep(10)
