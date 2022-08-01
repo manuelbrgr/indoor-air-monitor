@@ -1,3 +1,4 @@
 machine-learning/darts_logs
 .idea
 *.zip
+.venv

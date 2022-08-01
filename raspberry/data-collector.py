@@ -110,7 +110,7 @@ while True:
         # Update shadow
         deviceShadowHandler.shadowUpdate(json.dumps(
             payload), customShadowCallback_Update, 5)
-    except ValueError:
+    except:
         print("Something went wrong while trying to create the payload")
 
     time.sleep(10)
