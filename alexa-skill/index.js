@@ -49,7 +49,8 @@ const CarbonDioxideIntentHandler = {
   },
   async handle(handlerInput) {
     const airQuality = await getAirQualityValue().then((data) => {
-      const speakOutput = "The current CO2 level is " + data.state.co2 + "ppm.";
+      const speakOutput =
+        "The current CO2 level is " + Math.round(data.state.co2) + "ppm.";
 
       return handlerInput.responseBuilder.speak(speakOutput).getResponse();
     });
@@ -68,9 +69,9 @@ const TemperatureIntentHandler = {
     const airQuality = await getAirQualityValue().then((data) => {
       const speakOutput =
         "The current indoor temperature is " +
-        data.state.rtemperature +
+        Math.round(data.state.rtemperature) +
         " degrees, outdoors it is " +
-        data.state.temperature_outdoor +
+        Math.round(data.state.temperature_outdoor) +
         "degree Celsius";
 
       return handlerInput.responseBuilder.speak(speakOutput).getResponse();
@@ -90,9 +91,9 @@ const HumidityIntentHandler = {
     const airQuality = await getAirQualityValue().then((data) => {
       const speakOutput =
         "The current relative humidity indoor´s is " +
-        data.state.rhumidity +
+        Math.round(data.state.rhumidity) +
         " percent, outdoors it is " +
-        data.state.humidity_outdoor +
+        Math.round(data.state.humidity_outdoor) +
         " percent";
 
       return handlerInput.responseBuilder.speak(speakOutput).getResponse();
@@ -157,13 +158,13 @@ const GasIntentHandler = {
     const airQuality = await getAirQualityValue().then((data) => {
       const speakOutput =
         "The ammonia level is at " +
-        data.state.nh3 +
+        Math.round(data.state.nh3) +
         "ppm. " +
         "The OX level is at " +
-        data.state.ox +
+        Math.round(data.state.ox) +
         "ppm. " +
         "The RED level is at " +
-        data.state.red +
+        Math.round(data.state.red) +
         "ppm." +
         " T.V.O.C. levels are at " +
         data.state.tvoc +
@@ -237,7 +238,7 @@ const PredictionIntentHandler = {
     const airQuality = await getAirQualityValue().then((data) => {
       const speakOutput =
         "In 15 minutes, the CO2 level is predicted to reach " +
-        data.state.prediction_co2.value +
+        Math.round(data.state.prediction_co2.value) +
         "ppm.";
 
       return handlerInput.responseBuilder.speak(speakOutput).getResponse();
