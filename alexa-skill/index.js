@@ -235,7 +235,10 @@ const PredictionIntentHandler = {
   },
   async handle(handlerInput) {
     const airQuality = await getAirQualityValue().then((data) => {
-      const speakOutput = "I can´t look into the future just yet.";
+      const speakOutput =
+        "In 15 minutes, the CO2 level is predicted to reach " +
+        data.state.prediction_co2.value +
+        "ppm.";
 
       return handlerInput.responseBuilder.speak(speakOutput).getResponse();
     });
