@@ -161,7 +161,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/iaq-airbase-alexa/prod/1658533589301-2022-07-22T23:46:29.301Z/iaq-airbase-alexa.zip"
+          "S3Key": "serverless/iaq-airbase-alexa/prod/1659377821356-2022-08-01T18:17:01.356Z/iaq-airbase-alexa.zip"
         },
         "Handler": "index.handler",
         "Runtime": "nodejs14.x",
@@ -179,14 +179,14 @@
         "SkillLogGroup"
       ]
     },
-    "SkillLambdaVersionBeS11mprR1r9qCJATse6vzqfdGmpJDOHADeh1Azgd8": {
+    "SkillLambdaVersionmyMI9Hh4yqQWfqfOFSHSp9ivWDOoyDUa0IdQ0NxM": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "SkillLambdaFunction"
         },
-        "CodeSha256": "cPiXN5FVG8OAQaB2lPFfDbwFch9gkXBEtG7iAjyr+So="
+        "CodeSha256": "TGaDr1+g6bN0egJ8nqeVXluAa5stAP9XW77tQ9ZrkdQ="
       }
     },
     "SkillLambdaPermissionAlexaSkill1": {
@@ -216,7 +216,7 @@
     "SkillLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "SkillLambdaVersionBeS11mprR1r9qCJATse6vzqfdGmpJDOHADeh1Azgd8"
+        "Ref": "SkillLambdaVersionmyMI9Hh4yqQWfqfOFSHSp9ivWDOoyDUa0IdQ0NxM"
       },
       "Export": {
         "Name": "sls-iaq-airbase-alexa-prod-SkillLambdaFunctionQualifiedArn"
