@@ -131,7 +131,7 @@ export function Graph({ url, type }: { url: string; type: string }) {
 
         {
           label: `Draft Window`,
-          data: data.datasets.balcony,
+          data: data.datasets.draftwindow,
           backgroundColor: `rgb(60, 60, 60)`,
           borderColor: `rgb(60, 60, 60)`,
           borderWidth: 2,
