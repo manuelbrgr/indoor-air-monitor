@@ -13,11 +13,21 @@ import DoorFrontIcon from '@mui/icons-material/DoorFront';
 import DoorBackIcon from '@mui/icons-material/DoorBack';
 import WindowIcon from '@mui/icons-material/Window';
 import FireplaceIcon from '@mui/icons-material/Fireplace';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { getLiveData } from '@/api/getLiveData';
+import { LinearProgress, Tooltip } from '@mui/material';
 
-function LiveDataItem({ icon, title, value, unit }) {
+function LiveDataItem({ icon, title, value, unit, infotext, max }) {
   return (
     <Paper elevation={3}>
+      {infotext && (
+        <Box display="flex" justifyContent="right" sx={{ mb: -4, p: 0.5 }}>
+          <Tooltip title={infotext}>
+            <InfoOutlinedIcon style={{ cursor: 'pointer' }} />
+          </Tooltip>
+        </Box>
+      )}
+
       <Box
         display="flex"
         alignItems="center"
@@ -29,7 +39,11 @@ function LiveDataItem({ icon, title, value, unit }) {
         </Typography>
         <Typography variant="overline">{title}</Typography>
       </Box>
-      <Box textAlign="center" sx={{ pb: 2 }}>
+      <Box
+        textAlign="center"
+        style={{ color: max && value >= max ? ' #ba000d' : 'inherit' }}
+        sx={{ pb: 2 }}
+      >
         {value ? (
           <>
             <Typography variant="h4" component="span">
@@ -69,8 +83,10 @@ export default function LiveData() {
     heating: false,
   });
 
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       const data = await getLiveData();
 
       setLiveData({
@@ -87,6 +103,7 @@ export default function LiveData() {
         humidityOutdoor: data.state?.humidity_outdoor,
         heating: data.state?.heating,
       });
+      setLoading(false);
     };
 
     let i = 0;
@@ -108,33 +125,44 @@ export default function LiveData() {
   const sensorDataPrimary = [
     {
       icon: <ThermostatIcon />,
-      title: 'Indoor Temp',
+      title: 'Indoor Temp.',
       value: liveData.temperature,
       unit: '°C',
+      infotext: 'The temperature should not exceed 24° Celsius.',
+      max: 24,
     },
     {
       icon: <WaterIcon />,
-      title: 'Indoor Humid',
+      title: 'Indoor Humid.',
       value: liveData.humidity,
       unit: '% RH',
+      infotext: 'The relative humidity should not exceed 60%.',
+      max: 60,
     },
     {
       icon: <Co2Icon />,
       title: 'CO2',
       value: liveData.co2,
       unit: 'ppm',
+      infotext: 'The CO2 concentration should not exceed 1.000 ppm.',
+      max: 1000,
     },
     {
       icon: <Co2Icon />,
       title: 'CO2 Prediction (15min)',
       value: liveData.co2predicted,
       unit: 'ppm',
+      infotext:
+        'The prediction of the CO2 concentration should not exceed 1.000 ppm.',
+      max: 1000,
     },
     {
       icon: <DoorBackIcon />,
       title: 'Balcony Door',
       value: liveData.balconyDoor ? 'open' : 'closed',
       unit: '',
+      infotext: false,
+      max: false,
     },
 
     {
@@ -142,45 +170,59 @@ export default function LiveData() {
       title: 'Livingroom Window',
       value: liveData.livingroomWindow ? 'open' : 'closed',
       unit: '',
+      infotext: false,
+      max: false,
     },
     {
       icon: <DoorFrontIcon />,
       title: 'Livingroom Door',
       value: liveData.livingroomDoor ? 'open' : 'closed',
       unit: '',
+      infotext: false,
+      max: false,
     },
     {
       icon: <WindowIcon />,
       title: 'Kitchen Window',
       value: liveData.kitchenWindow ? 'open' : 'closed',
       unit: '',
+      infotext: false,
+      max: false,
     },
   ];
 
   const sensorDataSecondary = [
     {
       icon: <ThermostatIcon />,
-      title: 'Outdoor Temp',
+      title: 'Outdoor Temp.',
       value: liveData.temperatureOutdoor,
       unit: '°C',
+      infotext: false,
+      max: false,
     },
     {
       icon: <WaterIcon />,
-      title: 'Outdoor Humid',
+      title: 'Outdoor Humid.',
       value: liveData.humidityOutdoor,
       unit: '% RH',
+      infotext: false,
+      max: false,
     },
     {
       icon: <CloudIcon />,
       title: 'Pressure',
       value: liveData.pressure,
       unit: 'hPa',
+      infotext: false,
+      max: false,
     },
     {
       icon: <FireplaceIcon />,
       title: 'Heating',
       value: liveData.heating || 'OFF',
       unit: '',
+      infotext: false,
+      max: false,
     },
   ];
 
@@ -191,9 +233,9 @@ export default function LiveData() {
           container
           rowSpacing={1}
           columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-          sx={{ my: 3 }}
+          sx={{ mb: 3 }}
         >
-          <Grid item xs={12}>
+          <Grid item xs={12} pb={loading ? 0 : 1.5}>
             <Typography variant="h4" sx={{ my: 0 }}>
               LIVE Data
             </Typography>
@@ -202,6 +244,11 @@ export default function LiveData() {
               experiment. Next reading in: {countdown}sec
             </Typography>
           </Grid>
+          {loading && (
+            <Grid item xs={12} textAlign="right">
+              <LinearProgress />
+            </Grid>
+          )}
           {sensorDataPrimary.map((item, i) => (
             <Grid item key={i} xs={12} md={6} lg={3}>
               <LiveDataItem
@@ -209,6 +256,8 @@ export default function LiveData() {
                 title={item.title}
                 value={item.value}
                 unit={item.unit}
+                infotext={item.infotext}
+                max={item.max}
               />
             </Grid>
           ))}
@@ -229,6 +278,8 @@ export default function LiveData() {
                 title={item.title}
                 value={item.value}
                 unit={item.unit}
+                infotext={item.infotext || false}
+                max={item.max || false}
               />
             </Grid>
           ))}
