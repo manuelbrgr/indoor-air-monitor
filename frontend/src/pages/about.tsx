@@ -98,6 +98,16 @@ function AboutPage() {
               interest and awareness of indoor air quality parameters due to
               work shifting to working form home during the COVID-19 pandemic.
             </Typography>
+            <iframe
+              src="https://docs.google.com/forms/d/e/1FAIpQLSdfbjzlgopXeN4XVGrBLVPtd7w9jq43Gwo9NbiEZY5u_owO8w/viewform?embedded=true"
+              width="640"
+              height="2160"
+              frameborder="0"
+              marginheight="0"
+              marginwidth="0"
+            >
+              Wird geladen…
+            </iframe>
           </Grid>
         </Grid>
       </Box>

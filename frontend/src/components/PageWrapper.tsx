@@ -24,8 +24,13 @@ const navItems = [
     title: 'Dashboard',
     url: '/',
   },
-  { title: 'About', url: '/about', external: true },
-
+  { title: 'About', url: '/about' },
+  {
+    title: 'Survey',
+    url: 'https://forms.gle/qTi6j8F4nANpeU2w5',
+    target: '_blank',
+    external: true,
+  },
   {
     icon: <GitHubIcon sx={{ pr: 0.5 }} />,
     title: 'GitHub',
