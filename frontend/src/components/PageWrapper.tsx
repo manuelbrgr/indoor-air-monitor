@@ -27,7 +27,7 @@ const navItems = [
   { title: 'About', url: '/about' },
   {
     title: 'Survey',
-    url: 'https://forms.gle/qTi6j8F4nANpeU2w5',
+    url: 'https://docs.google.com/forms/d/e/1FAIpQLSdfbjzlgopXeN4XVGrBLVPtd7w9jq43Gwo9NbiEZY5u_owO8w/viewform?hl=en',
     target: '_blank',
     external: true,
   },
