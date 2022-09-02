@@ -173,7 +173,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/iaq-airbase-alexa/prod/1658533589301-2022-07-22T23:46:29.301Z/iaq-airbase-alexa.zip"
+                "S3Key": "serverless/iaq-airbase-alexa/prod/1659378479968-2022-08-01T18:27:59.968Z/iaq-airbase-alexa.zip"
               },
               "Handler": "index.handler",
               "Runtime": "nodejs14.x",
@@ -191,14 +191,14 @@
               "SkillLogGroup"
             ]
           },
-          "SkillLambdaVersionBeS11mprR1r9qCJATse6vzqfdGmpJDOHADeh1Azgd8": {
+          "SkillLambdaVersionu4giabhDqAuLFJAB95nQLzWY1CcavhYTr5RaZIZJGw": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "SkillLambdaFunction"
               },
-              "CodeSha256": "cPiXN5FVG8OAQaB2lPFfDbwFch9gkXBEtG7iAjyr+So="
+              "CodeSha256": "fDYXorbCCLUUvZs7Fu99/aOyjene6BwHotJJQe016Jc="
             }
           },
           "SkillLambdaPermissionAlexaSkill1": {
@@ -228,7 +228,7 @@
           "SkillLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "SkillLambdaVersionBeS11mprR1r9qCJATse6vzqfdGmpJDOHADeh1Azgd8"
+              "Ref": "SkillLambdaVersionu4giabhDqAuLFJAB95nQLzWY1CcavhYTr5RaZIZJGw"
             },
             "Export": {
               "Name": "sls-iaq-airbase-alexa-prod-SkillLambdaFunctionQualifiedArn"
@@ -335,7 +335,7 @@
         "timeout": 6,
         "runtime": "nodejs14.x",
         "vpc": {},
-        "versionLogicalId": "SkillLambdaVersionBeS11mprR1r9qCJATse6vzqfdGmpJDOHADeh1Azgd8"
+        "versionLogicalId": "SkillLambdaVersionu4giabhDqAuLFJAB95nQLzWY1CcavhYTr5RaZIZJGw"
       }
     },
     "configValidationMode": "warn",
@@ -355,7 +355,7 @@
     "artifact": "/Users/manuelberger/Documents/dev/github/indoor-air-monitor/alexa-skill/.serverless/iaq-airbase-alexa.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/iaq-airbase-alexa/prod/1658533589301-2022-07-22T23:46:29.301Z",
+    "artifactDirectoryName": "serverless/iaq-airbase-alexa/prod/1659378479968-2022-08-01T18:27:59.968Z",
     "artifact": "iaq-airbase-alexa.zip"
   }
 }

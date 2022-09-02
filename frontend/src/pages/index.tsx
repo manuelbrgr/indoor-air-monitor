@@ -1,57 +1,31 @@
-import React from 'react';
+import * as React from 'react';
+import PropTypes from 'prop-types';
+import Box from '@mui/material/Box';
+import LiveData from '@/components/LiveData';
+import HistoricalData from '@/components/HistoricalData';
+import PageWrapper from '@/components/PageWrapper';
 
-import Title from '@/components/Title';
-import Graph from '@/components/Graph';
-import { Box, Grid, Tab, Tabs } from '@mui/material';
-import { Helmet } from 'react-helmet';
-
-const baseUrl = `https://iaq-data.brgr.rocks`;
-
-export default function Home() {
-  const [value, setValue] = React.useState(`15min`);
-
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
-  };
-
+function IndexPage() {
   return (
-    <>
-      <Helmet>
-        <meta charSet="utf-8" />
-        <title>IAQ Monitor</title>
-      </Helmet>
-      <main>
-        <Grid container justifyContent="center" spacing={2}>
-          <Grid item xs={8}>
-            <Title>Indoor Air Quality Data</Title>
-          </Grid>
-        </Grid>
-        <Grid container justifyContent="center" spacing={2}>
-          <Grid item xs={8}>
-            <Box sx={{ width: `100%` }}>
-              <Box sx={{ borderBottom: 1, borderColor: `divider` }}>
-                <Tabs
-                  value={value}
-                  onChange={handleChange}
-                  aria-label="basic tabs example"
-                >
-                  <Tab label="Last 15min" value="15min" />
-                  <Tab label="Last Hour" value="hour" />
-                  <Tab label="Last Day" value="day" />
-                </Tabs>
-              </Box>
-            </Box>
-          </Grid>
-        </Grid>
-
-        <Grid container justifyContent="center" spacing={2}>
-          <Grid item xs={8}>
-            {value === `15min` && <Graph url={`${baseUrl}/15min.csv`} />}
-            {value === `hour` && <Graph url={`${baseUrl}/hour.csv`} />}
-            {value === `day` && <Graph url={`${baseUrl}/day.csv`} />}
-          </Grid>
-        </Grid>
-      </main>
-    </>
+    <PageWrapper>
+      <Box component="main" sx={{ p: 3 }}>
+        <Box sx={{ pb: 4 }} style={{ borderBottom: '1px solid #d3d3d3' }}>
+          <LiveData />
+        </Box>
+        <Box sx={{ mt: 6 }}>
+          <HistoricalData />
+        </Box>
+      </Box>
+    </PageWrapper>
   );
 }
+
+IndexPage.propTypes = {
+  /**
+   * Injected by the documentation to work in an iframe.
+   * You won't need it on your project.
+   */
+  window: PropTypes.func,
+};
+
+export default IndexPage;
